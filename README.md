@@ -1,8 +1,8 @@
 # cnf-operator
-// TODO(user): Add simple overview of use/purpose
+This is a simple operator that can be scaled like the deployment scale.
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+This repo is used to provide the code for deploying the custom resource for the QE testing. The custom operator is scalable, either by replica count or by horizontal pod autoscaler.
 
 ## Getting Started
 You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
@@ -42,7 +42,7 @@ make undeploy
 ```
 
 ## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
+Fork, pull request, approval.
 
 ### How it works
 This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
@@ -71,6 +71,7 @@ If you are editing the API definitions, generate the manifests such as CRs or CR
 ```sh
 make manifests
 ```
+
 
 **NOTE:** Run `make --help` for more information on all potential `make` targets
 
