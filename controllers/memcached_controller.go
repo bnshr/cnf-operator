@@ -37,7 +37,6 @@ import (
 type MemcachedReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
-	// Log    logr.Logger
 }
 
 // +kubebuilder:rbac:groups=cache.example.com,resources=memcacheds,verbs=get;list;watch;create;update;patch;delete
@@ -56,12 +55,8 @@ type MemcachedReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
 func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
+	log.Info("Triggered reconcile")
 
-	log.Info("Banashri triggered reconcile")
-
-	// TODO(user): your logic here
-
-	// log := r.Log.WithValues("memcached", req.NamespacedName)
 	memcached := cachev1.Memcached{}
 	err := r.Client.Get(ctx, req.NamespacedName, &memcached)
 	if err != nil {
@@ -77,7 +72,7 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, err
 	}
 
-	// 1. Check if the deployment already exists, if not create a new one
+	// Check if the deployment already exists, if not create a new one
 	found := &appsv1.Deployment{}
 	err = r.Get(ctx, req.NamespacedName, found)
 	if err != nil && errors.IsNotFound(err) {
@@ -96,15 +91,14 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, err
 	}
 
-	// 2. Retrieve the label selectors from the deployment
-
+	// Retrieve the label selectors from the deployment
 	selector, err := metav1.LabelSelectorAsSelector(found.Spec.Selector)
 	if err != nil {
 		log.Error(err, "Error retrieving Deployment labels")
 		return ctrl.Result{}, err
 	}
 
-	// Ensure the deployment size is the same as the spec
+	// Ensure the deployment replicas is the same as the spec
 	size := memcached.Spec.Replicas
 	if *found.Spec.Replicas != size {
 		found.Spec.Replicas = &size
@@ -117,6 +111,7 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true}, nil
 	}
 
+	// The idea is to update the selector to make some custom resources to be testable
 	memcached.Status.Selector = selector.String()
 	memcached.Status.Replicas = size
 
