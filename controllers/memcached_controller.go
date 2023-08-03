@@ -24,7 +24,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	"github.com/go-logr/logr"
 	cachev1 "github.com/test-network-function/cnf-operator/api/v1"
 
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -38,7 +37,7 @@ import (
 type MemcachedReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
-	Log    logr.Logger
+	// Log    logr.Logger
 }
 
 //+kubebuilder:rbac:groups=cache.example.com,resources=memcacheds,verbs=get;list;watch;create;update;patch;delete
@@ -55,11 +54,13 @@ type MemcachedReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
 func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	log := log.FromContext(ctx)
+
+	log.Info("Banashri triggered reconcile")
 
 	// TODO(user): your logic here
 
-	log := r.Log.WithValues("memcached", req.NamespacedName)
+	// log := r.Log.WithValues("memcached", req.NamespacedName)
 	memcached := cachev1.Memcached{}
 	err := r.Client.Get(ctx, req.NamespacedName, &memcached)
 	if err != nil {
