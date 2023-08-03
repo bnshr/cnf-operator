@@ -7,6 +7,9 @@ metadata:
     app.kubernetes.io/part-of: cnf-operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: cnf-operator
+    # For CNF tests
+    "test-network-function.com/generic":   target
+    "test-network-function.com/container": target
   name: memcached-sample
 spec:
   # TODO(user): Add fields here
