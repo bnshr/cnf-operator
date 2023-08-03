@@ -100,13 +100,16 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Ensure the deployment replicas is the same as the spec
 	size := memcached.Spec.Size
+	log.Info("Size for the memcachd : ", size)
 	if *found.Spec.Replicas != size {
+		log.Info("Desired replicas mismatch. Hence, updating.")
 		found.Spec.Replicas = &size
 		err = r.Update(ctx, found)
 		if err != nil {
 			log.Error(err, "Failed to update Deployment", "Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
 			return ctrl.Result{}, err
 		}
+		log.Info("Memcahd spec is updated successfully.")
 		// Spec updated - return and requeue
 		return ctrl.Result{Requeue: true}, nil
 	}
