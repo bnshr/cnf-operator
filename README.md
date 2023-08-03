@@ -9,7 +9,7 @@ This repo is used to provide the code for deploying the custom resource for the 
 1. **To compile the operator code**
 
 ```sh
-./scripts/compile
+./scripts/compile.sh
 ```
 
 2. **To build and deploy the operator code**
