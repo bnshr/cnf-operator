@@ -4,29 +4,37 @@ This is a simple operator that can be scaled like the deployment scale.
 ## Description
 This repo is used to provide the code for deploying the custom resource for the QE testing. The custom operator is scalable, either by replica count or by horizontal pod autoscaler.
 
-## Getting Started
-You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
-**Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
+## Getting started
 
-### Running on the cluster
-1. Install Instances of Custom Resources:
+1. **To compile the operator code**
+
+```sh
+./scripts/compile
+```
+
+2. **To build and deploy the operator code**
+
+```sh
+export KUBECONFIG=<cluster-kubeconfig>
+export IMG=<image-registry>.cnf-operator:<version>
+export NAMESPACE=<namespace>
+
+./scripts/build-deploy.sh $IMG $NAMESPACE
+```
+
+**NOTE** In case you do not have access to docker/quay, avoid this script and only deploy from the image pushed already in the image registry by running the following command.
+
+```sh
+make deploy $IMG
+```
+
+3. **To Install sample instance of Custom resources for testing**
 
 ```sh
 kubectl apply -f config/samples/
 ```
 
-2. Build and push your image to the location specified by `IMG`:
-
-```sh
-make docker-build docker-push IMG=<some-registry>/cnf-operator:tag
-```
-
-3. Deploy the controller to the cluster with the image specified by `IMG`:
-
-```sh
-make deploy IMG=<some-registry>/cnf-operator:tag
-```
-
+## Cleanup
 ### Uninstall CRDs
 To delete the CRDs from the cluster:
 
@@ -43,28 +51,11 @@ make undeploy
 
 ## Contributing
 Fork, pull request, approval.
-
-### How it works
+## Development
 This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
 
 It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/),
 which provide a reconcile function responsible for synchronizing resources until the desired state is reached on the cluster.
-
-### Test It Out
-1. Install the CRDs into the cluster:
-
-```sh
-make install
-```
-
-2. Run your controller (this will run in the foreground, so switch to a new terminal if you want to leave it running):
-
-```sh
-make run
-```
-
-**NOTE:** You can also run this in one step by running: `make install run`
-
 ### Modifying the API definitions
 If you are editing the API definitions, generate the manifests such as CRs or CRDs using:
 
